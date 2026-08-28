@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0a8d1c40d362d4844b6327366f041bcd
+guid: b5e385a924516634eaba4b7c33fa5fdb
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -49,7 +49,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteBorder: {x: 0, y: 0, z: 32, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -97,64 +97,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HermesBeta_0
-      rect:
-        serializedVersion: 2
-        x: 67
-        y: 31
-        width: 26
-        height: 33
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 64197cc570ca1c042886b91473efc91f
-      internalID: 548603452
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: HermesBeta_1
-      rect:
-        serializedVersion: 2
-        x: 33
-        y: 31
-        width: 29
-        height: 33
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6e5f25a43ac07c7459c6a5a2c70157f8
-      internalID: 408126704
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: HermesBeta_2
+      name: hermes_fall_anim_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 31
-        width: 28
-        height: 33
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        y: 0
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6ad57552dbed0574eb3bfa5e285be0e4
-      internalID: -74339849
+      spriteID: 998f5b55376f73f4381bd5e13f439eab
+      internalID: 459868522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hermes_fall_anim_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47d2711f29c7fc24eaee988c29f8814e
+      internalID: -571245694
       vertices: []
       indices: 
       edges: []
@@ -163,16 +142,15 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 0
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      HermesBeta_0: 548603452
-      HermesBeta_1: 408126704
-      HermesBeta_2: -74339849
+      hermes_fall_anim_0: 459868522
+      hermes_fall_anim_1: -571245694
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
