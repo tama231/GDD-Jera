@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayeerController : MonoBehaviour
 {
     [Header("Player Movement")]
+//Buat Jump player
     public float moveSpeed = 10f;
     public Rigidbody2D rb;
 
