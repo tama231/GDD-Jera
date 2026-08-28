@@ -9,6 +9,8 @@ public class PlayeerController : MonoBehaviour
 
     private float moveX;
     private float speedMultiplier = 1f;
+    private float jumpMultiplier = 1f;
+    private float gameSpeedMultiplier = 1f;
     private Coroutine speedEffectCoroutine;
     // Start is called before the first frame update
     void Start()
@@ -36,6 +38,29 @@ public class PlayeerController : MonoBehaviour
 
         speedEffectCoroutine = StartCoroutine(SpeedEffectRoutine(
             Mathf.Max(0.1f, multiplier), Mathf.Max(0f, duration)));
+    }
+
+    public float GetJumpMultiplier()
+    {
+        return jumpMultiplier;
+    }
+
+    public void ApplyJumpBoost(float multiplier)
+    {
+        jumpMultiplier *= Mathf.Max(0.1f, multiplier);
+    }
+
+    public void ApplyGameSpeed(float multiplier)
+    {
+        gameSpeedMultiplier *= Mathf.Max(0.1f, multiplier);
+        Time.timeScale = gameSpeedMultiplier;
+    }
+
+    public void ClearDebuffs()
+    {
+        gameSpeedMultiplier = 1f;
+        jumpMultiplier = 1f;
+        Time.timeScale = 1f;
     }
 
     private IEnumerator SpeedEffectRoutine(float multiplier, float duration)

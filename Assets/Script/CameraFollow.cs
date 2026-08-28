@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class CameraFollow : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class CameraFollow : MonoBehaviour
 
     private float lastTargetY;
     private int score;
+    public int Score => score;
+    public event Action<int> ScoreChanged;
 
     private void Start()
     {
@@ -37,6 +40,7 @@ public class CameraFollow : MonoBehaviour
             score += Mathf.FloorToInt(deltaY * scorePerUnitY);
             lastTargetY = currentY;
             UpdateScoreUI();
+            ScoreChanged?.Invoke(score);
         }
 
         if (target.position.y > transform.position.y)

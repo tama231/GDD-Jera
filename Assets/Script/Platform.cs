@@ -14,7 +14,9 @@ public class Platform : MonoBehaviour
             if (rb != null)
             {
                 Vector2 velocity = rb.velocity;
-                velocity.y = jumpForce;
+                PlayeerController player = collision.gameObject.GetComponent<PlayeerController>();
+                float jumpMultiplier = player != null ? player.GetJumpMultiplier() : 1f;
+                velocity.y = jumpForce * jumpMultiplier;
                 rb.velocity = velocity;
             }
         }
