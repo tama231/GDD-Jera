@@ -2,10 +2,16 @@ using UnityEngine;
 
 public class TemporaryPlatform : MonoBehaviour
 {
-    public float jumpForce = 10f;
+    [SerializeField] private float jumpForce = 12f;
 
     private bool hasBeenUsed;
     private int durabilityBonus;
+
+    public float JumpForce
+    {
+        get => jumpForce;
+        set => jumpForce = Mathf.Max(1f, value);
+    }
 
     public void SetDurabilityBonus(int bonus)
     {
@@ -17,23 +23,26 @@ public class TemporaryPlatform : MonoBehaviour
         if (hasBeenUsed)
             return;
 
-        if (collision.relativeVelocity.y <= 0f)
+        Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
+        if (rb == null)
+            return;
+
+        if (collision.relativeVelocity.y > 1f)
+            return;
+
+        if (durabilityBonus > 0)
+            durabilityBonus--;
+        else
+            hasBeenUsed = true;
+
+        Vector2 velocity = rb.velocity;
+        if (velocity.y <= 0f)
         {
-            Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                if (durabilityBonus > 0)
-                    durabilityBonus--;
-                else
-                    hasBeenUsed = true;
-                Vector2 velocity = rb.velocity;
-                PlayeerController player = collision.gameObject.GetComponent<PlayeerController>();
-                float jumpMultiplier = player != null ? player.GetJumpMultiplier() : 1f;
-                velocity.y = jumpForce * jumpMultiplier;
-                rb.velocity = velocity;
-                if (hasBeenUsed)
-                    Destroy(gameObject);
-            }
+            velocity.y = jumpForce;
+            rb.velocity = velocity;
         }
+
+        if (hasBeenUsed)
+            Destroy(gameObject);
     }
 }

@@ -16,11 +16,14 @@ public class GameManager : MonoBehaviour
     public AudioSource backgroundMusic;    
     public AudioClip rickrollClip;
     public int lives = 3;
+    private PlayeerController player;
     private float platformSpacingMultiplier = 1f;
     private float platformWidthMultiplier = 1f;
     private int temporaryDurabilityBonus;
     void Start()
     {
+        player = FindObjectOfType<PlayeerController>();
+
         if (loseUi != null)
             loseUi.SetActive(false);
         if (backgroundMusic != null)
@@ -35,7 +38,12 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        Vector3 spawnPosition = new Vector3();
+        Vector3 spawnPosition = player != null
+            ? new Vector3(player.transform.position.x, player.transform.position.y - 1f, 0f)
+            : new Vector3();
+
+        List<Vector3> placedPlatformPositions = new List<Vector3>();
+        bool nextTemporaryOnRight = true;
 
         int regularPlatformsRemaining = platformCount;
         int temporaryPlatformsRemaining = temporaryPlatformCount;
@@ -43,28 +51,78 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < totalPlatformCount; i++)
         {
-            spawnPosition.y += Random.Range(2f, 2.5f) * platformSpacingMultiplier;
-            spawnPosition.x = Random.Range(-5f, 5f);
+            spawnPosition.y += Random.Range(1.6f, 2.3f) * platformSpacingMultiplier;
+            float baseX = player != null ? player.transform.position.x : 0f;
 
             bool spawnTemporary = temporaryPlatformsRemaining > 0 &&
                 (regularPlatformsRemaining == 0 ||
                 Random.Range(0, regularPlatformsRemaining + temporaryPlatformsRemaining) < temporaryPlatformsRemaining);
 
+            float horizontalOffset;
             if (spawnTemporary)
             {
-                GameObject platform = Instantiate(temporaryPlatformPrefab, spawnPosition, Quaternion.identity);
+                float preferredSide = nextTemporaryOnRight ? 3.0f : -3.0f;
+                horizontalOffset = preferredSide + Random.Range(-0.7f, 0.7f);
+                nextTemporaryOnRight = !nextTemporaryOnRight;
+            }
+            else
+            {
+                horizontalOffset = Random.Range(-2.5f, 2.5f);
+            }
+
+            Vector3 candidatePosition = new Vector3(
+                Mathf.Clamp(baseX + horizontalOffset, -5.5f, 5.5f),
+                spawnPosition.y,
+                0f);
+
+            int attempt = 0;
+            while (attempt < 25)
+            {
+                bool tooCloseToExisting = false;
+                foreach (Vector3 existing in placedPlatformPositions)
+                {
+                    float distanceX = Mathf.Abs(existing.x - candidatePosition.x);
+                    float distanceY = Mathf.Abs(existing.y - candidatePosition.y);
+                    if (distanceX < (spawnTemporary ? 1.6f : 1.2f) && distanceY < 0.9f)
+                    {
+                        tooCloseToExisting = true;
+                        if (spawnTemporary)
+                        {
+                            float preferredSide = nextTemporaryOnRight ? 3.0f : -3.0f;
+                            candidatePosition.x = Mathf.Clamp(baseX + preferredSide + Random.Range(-0.8f, 0.8f), -5.5f, 5.5f);
+                        }
+                        else
+                        {
+                            candidatePosition.x = Mathf.Clamp(baseX + Random.Range(-2.5f, 2.5f), -5.5f, 5.5f);
+                        }
+                        candidatePosition.y += 0.15f;
+                        break;
+                    }
+                }
+
+                if (!tooCloseToExisting)
+                    break;
+
+                attempt++;
+            }
+
+            if (spawnTemporary)
+            {
+                GameObject platform = Instantiate(temporaryPlatformPrefab, candidatePosition, Quaternion.identity);
                 TemporaryPlatform temporaryPlatform = platform.GetComponent<TemporaryPlatform>();
                 if (temporaryPlatform != null)
                     temporaryPlatform.SetDurabilityBonus(temporaryDurabilityBonus);
+                placedPlatformPositions.Add(candidatePosition);
                 temporaryPlatformsRemaining--;
             }
             else
             {
-                GameObject platform = Instantiate(platformPrefab, spawnPosition, Quaternion.identity);
+                GameObject platform = Instantiate(platformPrefab, candidatePosition, Quaternion.identity);
                 platform.transform.localScale = new Vector3(
                     platform.transform.localScale.x * platformWidthMultiplier,
                     platform.transform.localScale.y,
                     platform.transform.localScale.z);
+                placedPlatformPositions.Add(candidatePosition);
                 regularPlatformsRemaining--;
             }
         }
@@ -78,12 +136,6 @@ public class GameManager : MonoBehaviour
     public void ChangePlatformWidth(float multiplier)
     {
         platformWidthMultiplier = Mathf.Max(0.25f, platformWidthMultiplier * multiplier);
-        Platform[] platforms = FindObjectsOfType<Platform>();
-        foreach (Platform platform in platforms)
-            platform.transform.localScale = new Vector3(
-                platform.transform.localScale.x * multiplier,
-                platform.transform.localScale.y,
-                platform.transform.localScale.z);
     }
 
     public void AddTemporaryDurability(int amount)

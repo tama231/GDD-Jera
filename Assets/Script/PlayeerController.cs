@@ -47,7 +47,7 @@ public class PlayeerController : MonoBehaviour
 
     public void ApplyJumpBoost(float multiplier)
     {
-        jumpMultiplier *= Mathf.Max(0.1f, multiplier);
+        jumpMultiplier = Mathf.Clamp(multiplier, 0.5f, 1.8f);
     }
 
     public void ApplyGameSpeed(float multiplier)

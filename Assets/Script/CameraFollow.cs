@@ -18,6 +18,7 @@ public class CameraFollow : MonoBehaviour
 
     private float lastTargetY;
     private int score;
+    private int currentScore;
     public int Score => score;
     public event Action<int> ScoreChanged;
 
@@ -59,5 +60,6 @@ public class CameraFollow : MonoBehaviour
     {
         if (skor != null)
             skor.text = "Score: " + score.ToString();
+
     }
 }
